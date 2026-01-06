@@ -46,6 +46,14 @@ class UserResource extends Resource
                     ->required()
                     ->default(\App\Models\User::ROLE_ANAK_MAGANG),
 
+                // Assign a mentor only for anak magang
+                Forms\Components\Select::make('mentor_id')
+                    ->label('Pembimbing')
+                    ->options(fn () => \App\Models\User::where('role', \App\Models\User::ROLE_PEMBIMBING)->pluck('name', 'id'))
+                    ->searchable()
+                    ->nullable()
+                    ->visible(fn ($get) => $get('role') === \App\Models\User::ROLE_ANAK_MAGANG),
+
                 Forms\Components\Toggle::make('is_active')
                     ->label('Active')
                     ->default(true),
@@ -80,7 +88,7 @@ class UserResource extends Resource
                     }),
 
                 Tables\Columns\IconColumn::make('is_active')->boolean()->label('Active')->sortable(),
-
+                Tables\Columns\TextColumn::make('mentor.name')->label('Pembimbing')->searchable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('active_from')
                     ->date()
                     ->label('Active from')
@@ -98,7 +106,7 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
 
                 Tables\Actions\Action::make('toggleActive')
                     ->label(fn ($record) => $record->is_active ? 'Deactivate' : 'Activate')

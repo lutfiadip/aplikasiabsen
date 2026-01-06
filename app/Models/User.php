@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -22,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'mentor_id',
         'is_active',
         'active_from',
         'active_until',
@@ -87,6 +90,7 @@ class User extends Authenticatable
         'is_active' => 'boolean',
         'active_from' => 'date',
         'active_until' => 'date',
+        'mentor_id' => 'int',
     ];
 
     public function isAdmin(): bool
@@ -102,5 +106,21 @@ class User extends Authenticatable
     public function isAnakMagang(): bool
     {
         return $this->role === self::ROLE_ANAK_MAGANG;
+    }
+
+    /**
+     * Mentor (pembimbing) relationship.
+     */
+    public function mentor(): ?BelongsTo
+    {
+        return $this->belongsTo(self::class, 'mentor_id');
+    }
+
+    /**
+     * Mentees (anak magang) relationship.
+     */
+    public function mentees(): HasMany
+    {
+        return $this->hasMany(self::class, 'mentor_id');
     }
 }
