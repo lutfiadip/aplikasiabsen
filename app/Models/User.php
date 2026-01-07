@@ -133,4 +133,38 @@ class User extends Authenticatable
     {
         return $this->hasMany(self::class, 'mentor_id');
     }
+
+    /**
+     * Return a public URL for the user's avatar compatible with Filament's header avatar.
+     */
+    public function getFilamentAvatarUrl(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        return asset('storage/' . $this->avatar);
+    }
+
+    /**
+     * Accessor for avatar URL as attribute `avatar_url`.
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->getFilamentAvatarUrl();
+    }
+
+    /**
+     * Backwards-compatible helpers for other libraries (Jetstream, etc.)
+     */
+    public function getAvatarUrl(): ?string
+    {
+        return $this->getFilamentAvatarUrl();
+    }
+
+    // Some packages expect `profile_photo_url` attribute
+    public function getProfilePhotoUrlAttribute(): ?string
+    {
+        return $this->getFilamentAvatarUrl();
+    }
 }
