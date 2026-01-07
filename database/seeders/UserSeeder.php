@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         User::firstOrCreate(
             ['email' => 'admin@example.com'],
-            ['name' => 'Admin', 'password' => Hash::make('password123'), 'role' => User::ROLE_ADMIN]
+            ['name' => 'Admin', 'password' => Hash::make('password123'), 'role' => User::ROLE_ADMIN, 'is_active' => true]
         );
     }
 }

@@ -41,7 +41,8 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            // Use FILESYSTEM_URL if set (can be '/storage' to avoid depending on APP_URL)
+            'url' => env('FILESYSTEM_URL', env('APP_URL').'/storage'),
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

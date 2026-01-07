@@ -54,6 +54,33 @@ class UserResource extends Resource
                     ->nullable()
                     ->visible(fn ($get) => $get('role') === \App\Models\User::ROLE_ANAK_MAGANG),
 
+                // Profile fields
+                Forms\Components\FileUpload::make('avatar')
+                    ->image()
+                    ->disk('public')
+                    ->directory('avatars')
+                    ->imagePreviewHeight('80')
+                    ->nullable(),
+
+                Forms\Components\TextInput::make('intern_id')
+                    ->label('Intern ID')
+                    ->nullable()
+                    ->maxLength(50),
+
+                Forms\Components\TextInput::make('division')
+                    ->label('Division')
+                    ->nullable()
+                    ->maxLength(100),
+
+                Forms\Components\DatePicker::make('start_date')
+                    ->label('Start date')
+                    ->nullable(),
+
+                Forms\Components\DatePicker::make('end_date')
+                    ->label('End date')
+                    ->nullable()
+                    ->rules(['after_or_equal:start_date']),
+
                 Forms\Components\Toggle::make('is_active')
                     ->label('Active')
                     ->default(true),
@@ -75,8 +102,23 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('avatar')
+                    ->label('Profil')
+                    ->url(fn ($state, $record) => $state ? '/storage/' . $state : null)
+                    ->height(40)
+                    ->width(40),
+
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('email')->searchable(),
+
+                Tables\Columns\TextColumn::make('intern_id')
+                    ->label('Intern ID')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('division')
+                    ->label('Division')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('role')
                     ->label('Role')
                     ->sortable()
@@ -86,6 +128,16 @@ class UserResource extends Resource
                         \App\Models\User::ROLE_ANAK_MAGANG => 'Anak Magang',
                         default => (string) $state,
                     }),
+
+                Tables\Columns\TextColumn::make('start_date')
+                    ->date()
+                    ->label('Start date')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('end_date')
+                    ->date()
+                    ->label('End date')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\IconColumn::make('is_active')->boolean()->label('Active')->sortable(),
                 Tables\Columns\TextColumn::make('mentor.name')->label('Pembimbing')->searchable()->toggleable(isToggledHiddenByDefault: true),

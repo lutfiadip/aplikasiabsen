@@ -28,6 +28,11 @@ class User extends Authenticatable
         'is_active',
         'active_from',
         'active_until',
+        'avatar',
+        'intern_id',
+        'division',
+        'start_date',
+        'end_date',
     ];
 
     /**
@@ -91,6 +96,11 @@ class User extends Authenticatable
         'active_from' => 'date',
         'active_until' => 'date',
         'mentor_id' => 'int',
+        'avatar' => 'string',
+        'intern_id' => 'string',
+        'division' => 'string',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     public function isAdmin(): bool

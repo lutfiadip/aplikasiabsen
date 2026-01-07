@@ -18,7 +18,8 @@ class UserPolicy
     public function view(User $user, User $model): bool
     {
         // Admin can view any user. Pembimbing can view only their mentees.
-        return $user->isAdmin() || ($user->isPembimbing() && $model->mentor_id === $user->id);
+        // Also allow users to view their own profile.
+        return $user->isAdmin() || ($user->isPembimbing() && $model->mentor_id === $user->id) || $user->id === $model->id;
     }
 
     public function create(User $user): bool
@@ -28,8 +29,8 @@ class UserPolicy
 
     public function update(User $user, User $model): bool
     {
-        // Only Admin may update users
-        return $user->isAdmin();
+        // Admin can update any user. Anak magang can update their own profile (restricted fields enforced in controller).
+        return $user->isAdmin() || ($user->isAnakMagang() && $user->id === $model->id);
     }
 
     public function delete(User $user, User $model): bool
