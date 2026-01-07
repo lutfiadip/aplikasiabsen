@@ -47,8 +47,8 @@ class ProfileUpdateTest extends TestCase
             'intern_id' => 'I-1234',
             'division' => 'QA',
             'mentor_id' => $admin->id,
-            'start_date' => '2026-01-01',
-            'end_date' => '2026-03-01',
+            'active_from' => '2026-01-01',
+            'active_until' => '2026-03-01',
             'role' => User::ROLE_ANAK_MAGANG,
         ])->assertSessionHasNoErrors();
 
@@ -58,7 +58,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertEquals('I-1234', $user->intern_id);
         $this->assertEquals('QA', $user->division);
         $this->assertEquals($admin->id, $user->mentor_id);
-        $this->assertEquals('2026-01-01', $user->start_date->toDateString());
+        $this->assertEquals('2026-01-01', $user->active_from->toDateString());
     }
 
     /** @test */

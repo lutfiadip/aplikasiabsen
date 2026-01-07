@@ -48,21 +48,30 @@ class ProfileController extends Controller
                 'intern_id' => ['nullable', 'string'],
                 'division' => ['nullable', 'string'],
                 'mentor_id' => ['nullable', 'exists:users,id'],
-                'start_date' => ['nullable', 'date'],
-                'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+                'active_from' => ['nullable', 'date'],
+                'active_until' => ['nullable', 'date', 'after_or_equal:active_from'],
             ];
 
             $validated = $request->validate($rules);
 
             $data = array_filter($validated, function ($v) { return $v !== null; });
         } else {
-            // Anak Magang can only update personal fields
+            // Anak Magang can only update personal fields. Any administrative fields are prohibited.
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 // email optional when not changing
                 'email' => ['nullable', 'email', Rule::unique('users')->ignore($target->id)],
                 'password' => ['nullable', 'string', 'min:8', 'confirmed'],
                 'avatar' => ['nullable', 'image', 'max:2048'],
+
+                // Prohibit administrative fields explicitly to prevent tampering
+                'role' => ['prohibited'],
+                'is_active' => ['prohibited'],
+                'intern_id' => ['prohibited'],
+                'division' => ['prohibited'],
+                'mentor_id' => ['prohibited'],
+                'start_date' => ['prohibited'],
+                'end_date' => ['prohibited'],
             ];
 
             $validated = $request->validate($rules);

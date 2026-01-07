@@ -66,15 +66,17 @@
             </select>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Start Date</label>
-            <input type="date" name="start_date" value="{{ old('start_date', optional($user->start_date)->toDateString()) }}" class="form-control" {{ auth()->user()->isAdmin() ? '' : 'disabled' }}>
-        </div>
+        @if($user->role !== \App\Models\User::ROLE_ANAK_MAGANG)
+            <div class="mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="start_date" value="{{ old('start_date', optional($user->start_date)->toDateString()) }}" class="form-control" {{ auth()->user()->isAdmin() ? '' : 'disabled' }}>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">End Date</label>
-            <input type="date" name="end_date" value="{{ old('end_date', optional($user->end_date)->toDateString()) }}" class="form-control" {{ auth()->user()->isAdmin() ? '' : 'disabled' }}>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" name="end_date" value="{{ old('end_date', optional($user->end_date)->toDateString()) }}" class="form-control" {{ auth()->user()->isAdmin() ? '' : 'disabled' }}>
+            </div>
+        @endif
 
         @if(!auth()->user()->isAdmin())
             <p class="text-muted">Data administratif hanya dapat diubah oleh admin.</p>

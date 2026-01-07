@@ -74,12 +74,14 @@ class UserResource extends Resource
 
                 Forms\Components\DatePicker::make('start_date')
                     ->label('Start date')
-                    ->nullable(),
+                    ->nullable()
+                    ->visible(fn ($get) => $get('role') !== \App\Models\User::ROLE_ANAK_MAGANG),
 
                 Forms\Components\DatePicker::make('end_date')
                     ->label('End date')
                     ->nullable()
-                    ->rules(['after_or_equal:start_date']),
+                    ->rules(['after_or_equal:start_date'])
+                    ->visible(fn ($get) => $get('role') !== \App\Models\User::ROLE_ANAK_MAGANG),
 
                 Forms\Components\Toggle::make('is_active')
                     ->label('Active')
